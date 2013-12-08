@@ -54,7 +54,7 @@
             })
 
             this.$body.on('keydown', function (e) { 
-                if (self._isFullMode()) {
+                if (self._isFullMode() && self._isActive()) {
                     e.stopPropagation();
                     self._keydown(e);
                 }
@@ -153,6 +153,9 @@
             }
         }
         /* modes */
+        , _isActive: function() {
+            return this.$el.hasClass('active')
+        }
         , _isFullMode: function () {
             return this.$body.hasClass('slider-mode-full');
         }
