@@ -1,0 +1,49 @@
+﻿.slider,
+.slide
+{
+    overflow: hidden;
+}
+
+.slider
+{
+    height: 100%;
+    width: 100%;
+}
+
+.slider h2,
+.slider h3
+{
+    text-align: center;
+}
+
+.slider h2
+{
+    margin: 0 0 0.5em 0;
+    font-size: 3em;
+}
+
+.slider h3
+{
+    margin: 0 0 1em 0;
+    font-size: 2em;
+}
+
+.slide
+{
+    padding: 11em 0;
+    display: none;
+}
+
+.slide.active
+{
+    display: block;
+}
+
+.slider-mode-full {
+    height: 100%;
+    overflow: hidden;
+}
+
+.slider-mode-full .slider.active {
+    overflow: hidden;
+}
