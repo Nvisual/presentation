@@ -39,11 +39,28 @@
     display: block;
 }
 
-.slider-mode-full {
+.slider-mode-full
+{
     height: 100%;
     overflow: hidden;
 }
 
-.slider-mode-full .slider.active {
+.background
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 10000;
+    background: #494949 url(../images/bg.jpg) center top;
+}
+
+.slider-mode-full .slider.active
+{
+    position: absolute;
+    top: 50%;
+    left: 50%;
     overflow: hidden;
+    z-index: 10001;
 }

@@ -13,38 +13,49 @@
             , showCounter: true
             , counterClass: '.slide-counter'
         }
-         , keyCode: {
-            ENTER: 13,
-            NUMPAD_ENTER: 108,
-            ESCAPE: 27,
-            RIGHT: 39,
-            LEFT: 37,
-            DOWN: 40,
-            UP: 38,
-            SPACE: 32,
-            END: 35,
-            HOME: 36,
-            PAGE_DOWN: 34,
-            PAGE_UP: 33
+
+        , keyCode: {
+              ENTER: 13
+            , SPACE: 32
+            , ESCAPE: 27
+            , NUMPAD_ENTER: 108
+
+            , UP: 38
+            , RIGHT: 39
+            , DOWN: 40
+            , LEFT: 37
+
+            , HOME: 36
+            , END: 35
+            , PAGE_UP: 33
+            , PAGE_DOWN: 34
         }
-        /* methods starts with underscore means private*/
+
+        /* methods starts with underscore means private */
         , _init: function (element, options) {
             this.$el = $(element);
             this.$body = $('body');
             this.$html = $('html');
+
             this.options = $.extend({}, this.defaults, options);
 
             this.curSlide = 0;
 
-            this.$slides = this.getSlides();
+            this.$slides = this._getSlides();
             this.totalSlides = this.$slides.length;
 
-            this._bindEvents();
-
             if (this.totalSlides) {
+                this._writeDimensions();
+                this._bindEvents();
                 this.step(1);
             }
         }
+
+        /* allow fit dynamicly */
+        , _writeDimensions: function () {
+
+        }
+
         , _bindEvents: function () {
             var self = this;
 
@@ -59,26 +70,22 @@
                     self._keydown(e);
                 }
             })
+
+            $(window).on('resize', function (e) {
+                if (self._isFullMode() && self._isActive()) {
+                    self._setTransform()
+                }
+            });
         }
+
         , _destroy: function () {
-            /*is it needed?*/
+            /* is it needed? */
         }
-        , _getTransform: function () {
-            var multiplicator = window.innerHeight / this.$el[0].clientHeight;
-            return multiplicator;
+
+        , _isActive: function() {
+            return this.$el.hasClass('active')
         }
-        , _setTransform: function (transform) {
-            var props = [
-                        '-webkit-transform',
-                           '-moz-transform',
-                            '-ms-transform',
-                              'o-transform',
-                                'transform'
-                        ]
-            for (var i = 0, l = props.length; i < l; i++) {
-                this.$el.css(props[i], 'scale(' + transform + ')')
-            }
-        }
+
         /* navigation */
         , _keydown: function (e) {
             var keyCode = this.keyCode;
@@ -111,22 +118,25 @@
                     break;
             }
         }
-        , getSlides: function () {
+
+        , _getSlides: function () {
             if (this.options.slideClass) {
                 return this.$el.find(this.options.slideClass);
             }
             return []
         }
-        , getSlide: function (slideNum) {
+
+        , _getSlide: function (slideNum) {
             if (this.$slides.length) {
                 return this.$slides.filter('.slide-num-' + slideNum)
             }
             return []
         }
+
         , step: function (slideNum) {
             if (!slideNum) return new Error('slide number is undefined');
 
-            var $slide = this.getSlide(slideNum);
+            var $slide = this._getSlide(slideNum);
 
             if ($slide.length) {
                 this.$slides.removeClass('active');
@@ -136,29 +146,71 @@
                 return new Error('slide witn number ' + slideNum + ' not found');
             }
         }
+
         , next: function () {
-            if (this.curSlide < this.totalSlides) {
-                this.step(++this.curSlide);
-            }
+            if (this.curSlide < this.totalSlides) this.step(++this.curSlide);
         }
+
         , prev: function () {
-            if (this.curSlide > 1) {
-                this.step(--this.curSlide);
-            }
+            if (this.curSlide > 1) this.step(--this.curSlide);
         }
+
         , updateCounter: function (slideNum) {
             this.curSlide = slideNum;
             if (this.options.showCounter) {
                 /* curSlide/totalSlides */
             }
         }
-        /* modes */
-        , _isActive: function() {
-            return this.$el.hasClass('active')
+
+        /* transformation */
+        , _getTransformMultiplier: function () {
+            var height = window.innerHeight / this.$el[0].clientHeight
+              , width = window.innerWidth / this.$el[0].clientWidth;
+
+            return Math.min(height, width);
         }
+
+        , _setTransformMultiplier: function (transform) {
+            var props = [
+                        '-webkit-transform',
+                           '-moz-transform',
+                            '-ms-transform',
+                              'o-transform',
+                                'transform'
+                        ]
+            for (var i = 0, l = props.length; i < l; i++) {
+                this.$el.css(props[i], 'scale(' + transform + ')')
+            }
+        }
+
+        , _fitTransform: function (transform) {
+            var styles = {};
+
+            styles.width = this.$el[0].clientWidth;
+            styles.height = this.$el[0].clientHeight;
+
+            styles.marginTop = (transform)? -styles.height*0.5: 0;
+            styles.marginLeft = (transform)? -styles.width*0.5: 0;
+
+            this.$el.css(styles)
+        }
+
+        , _setTransform: function () {
+            var transform = this._getTransformMultiplier()
+            this._setTransformMultiplier(transform)
+            this._fitTransform(transform)
+        }
+
+        , _resetTransform: function () {
+            this._setTransformMultiplier(1)
+            this._fitTransform(0)
+        }
+
+        /* modes */
         , _isFullMode: function () {
             return this.$body.hasClass('slider-mode-full');
         }
+
         , _toggleMode: function () {
             if (this._isFullMode()) {
                 this.exitFullMode();
@@ -166,52 +218,54 @@
                 this.enterFullMode();
             }
         }
+
         , enterFullMode: function () {
-            this.$body.addClass('slider-mode-full');
-            /* lock scroll (html for ie)*/
             this.$html.addClass('slider-mode-full');
+            this.$body.addClass('slider-mode-full');
 
-            this._setTransform(this._getTransform())
+            this.$background = $('<div class="background"></div>').appendTo(this.$body);
 
-            var top = this.$el.offset().top;
-            this.$el.addClass('active')
-                    .css('margin-top', -top);
+            this._setTransform();
+            this.$el.addClass('active');
         }
+
         , exitFullMode: function () {
             this.$body.removeClass('slider-mode-full');
-            /* lock scroll (html for ie)*/
             this.$html.removeClass('slider-mode-full');
 
-            this.$el.removeClass('active')
-                    .css('margin-top', 0);
-            this._setTransform(1)
+            this.$background && this.$background.remove();
+            this.$background = null;
+
+            this._resetTransform();
+            this.$el.removeClass('active');
         }
     };
 
     $.fn.slider = function (options) {
-        var   instance = this.data('slider')
-            , isMethodCall = typeof options === "string"
-            , args = Array.prototype.slice.call(arguments, 1)/* allow call public method with arguments*/
-            , returnValue = this;
+        var args = Array.prototype.slice.call(arguments, 1)   /* allow call public method with arguments */
+          , instance = this.data('slider')
+          , isMethodCall = (typeof options === 'string')      /* senseless comment: brackets only for easy reading */
+          , returnValue = this;                               /* how about custom method returnValue (not always this for chaining)? */
 
         this.each(function() {
             if (isMethodCall) {
                 if (!instance) {
                     return new Error('Cannot call ' +  method + ' before init jQuery.slider');
                 }
-                if (!$.isFunction(instance[options]) || options.charAt(0) === "_" ) {
+                if ($.isFunction(instance[options]) || options.charAt(0) === '_') {
                     return new Error('Method ' +  method + ' not found among jQuery.slider methods');
                 }
-                /* method return value (not always this)?*/
+
                 instance[options](args);
             } else {
                 if (instance) {
-                    /* what we do if already setup widget?*/
+                    /* what shall we do, if widget already initialized? */
                 } else {
                     $(this).data('slider', new $.Slider(this, options));
                 }
             }
         });
+
         return returnValue;
     };
 
