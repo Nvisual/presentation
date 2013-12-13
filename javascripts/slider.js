@@ -45,6 +45,7 @@
             this.totalSlides = this.$slides.length;
 
             if (this.totalSlides) {
+                this._makeCounter();
                 this._writeDimensions();
                 this._bindEvents();
                 this.step(1);
@@ -52,10 +53,6 @@
         }
 
         /* allow fit dynamicly */
-        , _writeDimensions: function () {
-
-        }
-
         , _bindEvents: function () {
             var self = this;
 
@@ -78,12 +75,32 @@
             });
         }
 
+        , _writeDimensions: function () {
+
+        }
+
+
+
         , _destroy: function () {
             /* is it needed? */
         }
 
-        , _isActive: function() {
+        , _isActive: function () {
             return this.$el.hasClass('active')
+        }
+
+        , _makeCounter: function () {
+            var counter = '<div class="slide-counter"></div>';
+            this.$counter = $(counter).appendTo(this.$el);
+        }
+
+        , updateCounter: function (slideNum, resetTotal) {
+            this.curSlide = slideNum;
+
+            if (this.options.showCounter) {
+                var counter_txt = this.curSlide + '/' + this.totalSlides;
+                this.$counter.text(counter_txt)
+            }
         }
 
         /* navigation */
@@ -139,8 +156,15 @@
             var $slide = this._getSlide(slideNum);
 
             if ($slide.length) {
-                this.$slides.removeClass('active');
-                $slide.addClass('active');
+                if (this.$curSlide) {
+                    $slide.animate({opacity: .99}, 500);
+                    this.$curSlide.animate({opacity: 0}, 500);
+                    this.$curSlide.removeClass('current');
+                }
+                 $slide.addClass('current');
+
+                this.$curSlide = $slide;
+
                 this.updateCounter(slideNum);
             } else {
                 return new Error('slide witn number ' + slideNum + ' not found');
@@ -153,13 +177,6 @@
 
         , prev: function () {
             if (this.curSlide > 1) this.step(--this.curSlide);
-        }
-
-        , updateCounter: function (slideNum) {
-            this.curSlide = slideNum;
-            if (this.options.showCounter) {
-                /* curSlide/totalSlides */
-            }
         }
 
         /* transformation */
