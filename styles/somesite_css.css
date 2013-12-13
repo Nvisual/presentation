@@ -129,7 +129,10 @@ p
        -moz-box-shadow: 0 0 0 1px rgba(0,0,0,.1),0 0 10px 0 rgba(0,0,0,.6);
             box-shadow: 0 0 0 1px rgba(0,0,0,.1),0 0 10px 0 rgba(0,0,0,.6);
 }
-
+.my-second-slider.active
+{
+    background: #494949 url(../images/bg.jpg) center top;
+}
 .my-first-slider h2,
 .my-first-slider h3,
 .my-first-slider p
