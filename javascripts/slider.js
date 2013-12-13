@@ -6,12 +6,12 @@
 
     $.Slider.prototype = {
         defaults: {
-              slideClass: '.slide'
-            , nextBtn: '.slide-next'
-            , prevBtn: '.slide-prev'
-            , fullBtn: '.slide-full-size'
+              slideSl: '.slide'
+            , nextBtnSl: '.slide-next'
+            , prevBtnSl: '.slide-prev'
+            , fullBtnSl: '.slide-full-size'
+            , backgroundCl: 'background'
             , showCounter: true
-            , counterClass: '.slide-counter'
         }
 
         , keyCode: {
@@ -137,8 +137,8 @@
         }
 
         , _getSlides: function () {
-            if (this.options.slideClass) {
-                return this.$el.find(this.options.slideClass);
+            if (this.options.slideSl) {
+                return this.$el.find(this.options.slideSl);
             }
             return []
         }
@@ -240,7 +240,7 @@
             this.$html.addClass('slider-mode-full');
             this.$body.addClass('slider-mode-full');
 
-            this.$background = $('<div class="background"></div>').appendTo(this.$body);
+            this.$background = $('<div class="' + this.options.backgroundCl + '"></div>').appendTo(this.$body);
 
             this._setTransform();
             this.$el.addClass('active');

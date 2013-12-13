@@ -1,5 +1,8 @@
 (function () {
     $(document).ready(function() {
-        $('.slider').slider()
+        $('.my-first-slider').slider();
+        $('.my-second-slider').slider({
+            backgroundCl: 'my-background'
+        });
     });
 })()

@@ -129,8 +129,14 @@ p
        -moz-box-shadow: 0 0 0 1px rgba(0,0,0,.1),0 0 10px 0 rgba(0,0,0,.6);
             box-shadow: 0 0 0 1px rgba(0,0,0,.1),0 0 10px 0 rgba(0,0,0,.6);
 }
-.my-second-slider.active
+.my-background
 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 10000;
     background: #494949 url(../images/bg.jpg) center top;
 }
 .my-first-slider h2,
