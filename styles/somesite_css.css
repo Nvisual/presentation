@@ -89,6 +89,11 @@ p {
     color: #FFF;
 }
 
+.slider-slide {
+    width: 650px;
+    padding: 0 30px;
+}
+
 .my-first-slider .slider-content,
 .my-first-slider .slider-nav .slider-slide {
     color: #FFF;
@@ -133,4 +138,12 @@ p {
 .my-second-slider h3,
 .my-second-slider p {
     text-shadow: 2px 2px 2px #2A1F47;
+}
+
+.slider-slide__num-2 h2 {
+    margin-top: 20px;
+}
+
+.slider-slide li{
+    margin-bottom: 10px;
 }

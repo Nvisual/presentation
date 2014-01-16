@@ -161,8 +161,7 @@
     background-position: 50% -102px;
 }
 
-.slider-content,
-.slider-nav .slider-slide {
+.slider-content {
     width: 710px;
     height: 488px;
 }
