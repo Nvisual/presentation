@@ -1,111 +1,125 @@
 (function ($) {
-
     $.Slider = function (element, options) {
         this._init(element, options);
     };
 
     $.Slider.prototype = {
-        defaults: {
-              slideSl: '.slide'
-            , nextBtnSl: '.slide-next'
-            , prevBtnSl: '.slide-prev'
-            , fullBtnSl: '.slide-full-size'
-            , backgroundCl: 'background'
+        // constants
+        DEFAULTS: {
+              showNav: true
             , showCounter: true
+            , animateToggleNav: 250
+            , animateStep: 750
         }
 
-        , keyCode: {
-              ENTER: 13
-            , SPACE: 32
-            , ESCAPE: 27
-            , NUMPAD_ENTER: 108
+        , CLASSES: {
+            // common slider
+              slider_active:     'slider-active'
+            , slider_mode_full:  'slider-mode-full'
+            , slider_background: 'slider-background'
+            , slider_content:    'slider-content'
+            // counter
+            , counter:       'slider-counter'
+            // slide
+            , slide:         'slider-slide'
+            , slide_num:     'slider-slide__num-'
+            , slide_current: 'slider-slide__current'
+            , slide_visible: 'slider-slide__visible'
+            // navigation
+            , nav:           'slider-nav'
+            , nav_content:   'slider-nav__content'
+            , nav_btn:       'slider-nav__btn'
+            , nav_btn_prev:  'slider-nav__btn-role-prev'
+            , nav_btn_next:  'slider-nav__btn-role-next'
+            , nav_slides_start:  'slider-nav__slides-start'
+            , nav_slides_end:    'slider-nav__slides-end'
+        }
 
+        , KEY_CODES: {
+            // toggle fullscrenn || step next slide in full mode
+              ENTER: 13 
+            , NUMPAD_ENTER: 108
+            // exit full mode
+            , ESCAPE: 27
+            // step first slide
+            , HOME: 36
+            // step last slide
+            , END: 35
+            // step prev
             , UP: 38
+            , LEFT: 37
+            , BACKSPACE: 8
+            , PAGE_UP: 33
+            // step next
             , RIGHT: 39
             , DOWN: 40
-            , LEFT: 37
-
-            , HOME: 36
-            , END: 35
-            , PAGE_UP: 33
+            , SPACE: 32
             , PAGE_DOWN: 34
+            // toggle navigation
+            , N: 78
         }
 
-        /* methods starts with underscore means private */
+        , PREF_PROPS: [
+            '-webkit-transform',
+               '-moz-transform',
+                '-ms-transform',
+                  'o-transform',
+                    'transform'
+        ]
+
+        // initialization
+        // _method - private method
         , _init: function (element, options) {
             this.$el = $(element);
             this.$body = $('body');
             this.$html = $('html');
+            this.options = $.extend({}, this.DEFAULTS, options);
 
-            this.options = $.extend({}, this.defaults, options);
-
-            this.curSlide = 0;
+            this.currSlide = 0;
+            this.$content = this.$el.find('.' + this.CLASSES.slider_content);
 
             this.$slides = this._getSlides();
             this.totalSlides = this.$slides.length;
 
-            if (this.totalSlides) {
-                this._makeCounter();
-                this._writeDimensions();
-                this._bindEvents();
-                this.step(1);
+            if (this.options.showNav) {
+                this.$nav = this._makeNavigation();
+                this.$nav_slides = this._getSlides(this.$nav);
+                this.$nav_btn_prev = this.$nav.find('.' + this.CLASSES.nav_btn_prev);
+                this.$nav_btn_next = this.$nav.find('.' + this.CLASSES.nav_btn_next);
             }
+            if (this.options.showCounter) {
+                this.$counter = this._makeCounter();
+            }
+
+            this._bindEvents();
+            this.step(1);
         }
 
-        /* allow fit dynamicly */
         , _bindEvents: function () {
             var self = this;
-
-            this.$el.on('click', function (e) {
-                e.stopPropagation();
+            this.$content.on('click', function (e) {
                 self._toggleMode();
-            })
-
-            this.$body.on('keydown', function (e) { 
+            });
+            this.$body.on('keydown', function (e) {
                 if (self._isFullMode() && self._isActive()) {
-                    e.stopPropagation();
                     self._keydown(e);
                 }
-            })
-
+            });
             $(window).on('resize', function (e) {
                 if (self._isFullMode() && self._isActive()) {
-                    self._setTransform()
+                    self._setTransform();
                 }
             });
-        }
-
-        , _writeDimensions: function () {
-
-        }
-
-
-
-        , _destroy: function () {
-            /* is it needed? */
-        }
-
-        , _isActive: function () {
-            return this.$el.hasClass('active')
-        }
-
-        , _makeCounter: function () {
-            var counter = '<div class="slide-counter"></div>';
-            this.$counter = $(counter).appendTo(this.$el);
-        }
-
-        , updateCounter: function (slideNum, resetTotal) {
-            this.curSlide = slideNum;
-
-            if (this.options.showCounter) {
-                var counter_txt = this.curSlide + '/' + this.totalSlides;
-                this.$counter.text(counter_txt)
+            if (this.$nav_btn_prev.length) {
+                this.$nav_btn_prev.on('click', function (e) { self.prev() });
+            }
+            if (this.$nav_btn_next.length) {
+                this.$nav_btn_next.on('click', function (e) { self.next() });
             }
         }
 
-        /* navigation */
         , _keydown: function (e) {
-            var keyCode = this.keyCode;
+            var keyCode = this.KEY_CODES;
             switch (e.keyCode) {
                 case keyCode.HOME:
                     this.step(1);
@@ -120,8 +134,8 @@
                     break;
 
                 case keyCode.RIGHT:
-                case keyCode.SPACE:
                 case keyCode.DOWN:
+                case keyCode.SPACE:
                 case keyCode.PAGE_DOWN:
                 case keyCode.ENTER:
                 case keyCode.NUMPAD_ENTER:
@@ -133,150 +147,238 @@
                 case keyCode.PAGE_UP:
                     this.prev();
                     break;
+                case keyCode.N:
+                    this.$nav && this._toggleNav();
+                    break;
             }
         }
 
-        , _getSlides: function () {
-            if (this.options.slideSl) {
-                return this.$el.find(this.options.slideSl);
+        , _isActive: function () {
+            return this.$el.hasClass(this.CLASSES.slider_active)
+        }
+
+        // counter
+        , _makeCounter: function () {
+            var counter = '<div class="' + this.CLASSES.counter + '"></div>';
+            return $(counter).appendTo(this.$content);
+        }
+
+        , updateCounter: function (slideNum) {
+            this.currSlide = slideNum;
+            if (this.$counter) {
+                var counter_txt = this.currSlide + '/' + this.totalSlides;
+                this.$counter.text(counter_txt);
             }
-            return []
+        }
+
+        // navigation
+        , _makeNavigation: function () {
+            var content = this.$content.html();
+            var nav = '<div class="' + this.CLASSES.nav + '">' +
+                          '<div class="' + this.CLASSES.nav_btn +' '+ this.CLASSES.nav_btn_prev + '"></div>' +
+                          '<div class="' + this.CLASSES.nav_content + '">' +
+                              content +
+                          '</div>' +
+                          '<div class="' + this.CLASSES.nav_btn +' '+ this.CLASSES.nav_btn_next + '"></div>' +
+                      '</div>';
+            return $(nav).appendTo(this.$el);
+        }
+
+        , _toggleNav: function () {
+            var delay = this.options.animateToggleNav;
+            this.$nav.finish();
+            if (this.nav_visible) {
+                this.$nav.animate({marginLeft: '-20%', opacity: 0}, delay, function () { $(this).hide(); });
+                this._setScale(this.$content, 1);
+                this.$content.css({marginLeft: 0});
+                this.nav_visible = 0;
+            } else {
+                this._updateNavigation();
+                this.$nav.show().animate({marginLeft: 0, opacity: 1}, delay);
+                this._setScale(this.$content, 0.8);
+                this.$content.css({marginLeft: '10%'});
+                this.nav_visible = 1;
+            }
+        }
+
+        , _toggleClass: function ($el, className, condition) {
+            (condition)? $el.addClass(className): $el.removeClass(className);
+        }
+
+        , _updateNavSlideClass: function ($slide, num, current) {
+            var total = this.totalSlides
+              , visibility_range = (current < 4 || total <= 5)? 5 - current:
+                                         (total - current < 3)? 4 - (total - current): 2;
+                                         console.log(visibility_range)
+            this._toggleClass($slide, this.CLASSES.slide_visible, Math.abs(current - num) <= visibility_range);
+            this._toggleClass($slide, this.CLASSES.slide_current, num === current);
+        }
+
+        , _updateNavigation: function () {
+            var total = this.totalSlides
+              , current = this.currSlide
+              , skip = (current < 4 || total <= 5)? 3: (total - current < 3)? total - 2: current;
+            // нумерация слайдов с 1, а храним проиндексированными с 0 (место для удара головой).
+            for (var i = 1, $slide; i <= total; i++) {
+                $slide = $(this.$nav_slides[i-1]);
+                this._updateNavSlideClass($slide, i, current);
+                this._setTranslate($slide, '-40%', (i - skip) * 115 + '%', '-6px');// база 1 (perspective), 6px - 6*кратный zoom
+            }
+            this._toggleClass(this.$nav, this.CLASSES.nav_slides_start, current > 3);
+            this._toggleClass(this.$nav, this.CLASSES.nav_slides_end, total - current >= 3);
+        }
+
+        , _getSlides: function ($el) {
+            var $target = ($el)? $el: this.$content;
+            return $target.find('.' + this.CLASSES.slide);
         }
 
         , _getSlide: function (slideNum) {
+            var result = [];
             if (this.$slides.length) {
-                return this.$slides.filter('.slide-num-' + slideNum)
+                result = this.$slides.filter('.' + this.CLASSES.slide_num + slideNum);
             }
-            return []
+            return result;
+        }
+
+        , _animateStep: function ($newSlide) {
+            // используем finish, т.к. хотим чтобы одновременно воспроизводилось не более 2-х анимаций.
+            if (this.$prevSlide) this.$prevSlide.finish();
+            if (this.$currSlide) {
+                this.$currSlide.finish().animate({opacity: 0}, this.options.animateStep);
+            }
+            $newSlide.animate({opacity: .99}, this.options.animateStep);
         }
 
         , step: function (slideNum) {
-            if (!slideNum) return new Error('slide number is undefined');
+            if (!slideNum) throw new Error('need slide number to step');
 
-            var $slide = this._getSlide(slideNum);
+            var $newSlide = this._getSlide(slideNum);
 
-            if ($slide.length) {
-                if (this.$curSlide) {
-                    $slide.animate({opacity: .99}, 500);
-                    this.$curSlide.animate({opacity: 0}, 500);
-                    this.$curSlide.removeClass('current');
+            if ($newSlide.length) {
+                if (this.options.animateStep) this._animateStep($newSlide);
+
+                if (this.$currSlide) {
+                    this.$currSlide.removeClass(this.CLASSES.slide_current);
+                    this.$prevSlide = this.$currSlide;
                 }
-                 $slide.addClass('current');
 
-                this.$curSlide = $slide;
+                $newSlide.addClass(this.CLASSES.slide_current);
+                this.$currSlide = $newSlide;
 
                 this.updateCounter(slideNum);
+                if (this.nav_visible) this._updateNavigation();
             } else {
-                return new Error('slide witn number ' + slideNum + ' not found');
+                throw new Error('slide witn number ' + slideNum + ' not found');
             }
         }
 
         , next: function () {
-            if (this.curSlide < this.totalSlides) this.step(++this.curSlide);
+            if (this.currSlide < this.totalSlides) this.step(++this.currSlide);
         }
 
         , prev: function () {
-            if (this.curSlide > 1) this.step(--this.curSlide);
+            if (this.currSlide > 1) this.step(--this.currSlide);
         }
 
-        /* transformation */
-        , _getTransformMultiplier: function () {
+        // transformations
+        , _getScaleMultiplier: function () {
             var height = window.innerHeight / this.$el[0].clientHeight
               , width = window.innerWidth / this.$el[0].clientWidth;
-
             return Math.min(height, width);
         }
 
-        , _setTransformMultiplier: function (transform) {
-            var props = [
-                        '-webkit-transform',
-                           '-moz-transform',
-                            '-ms-transform',
-                              'o-transform',
-                                'transform'
-                        ]
+        , _setScale: function ($el, value) {
+            var props = this.PREF_PROPS
+              , scale = 'scale(' + value + ')';
             for (var i = 0, l = props.length; i < l; i++) {
-                this.$el.css(props[i], 'scale(' + transform + ')')
+                $el.css(props[i], scale);
             }
         }
 
-        , _fitTransform: function (transform) {
+        , _setTranslate: function ($el, x, y, z) {
+            var props = this.PREF_PROPS;
+            for (var i = 0, l = props.length; i < l; i++) {
+                $el.css(props[i], 'translate(' + x + ',' + y + ') translateZ(' + z + ')');
+            }
+        }
+
+        , _fitTransform: function (scale) {
             var styles = {};
 
             styles.width = this.$el[0].clientWidth;
             styles.height = this.$el[0].clientHeight;
 
-            styles.marginTop = (transform)? -styles.height*0.5: 0;
-            styles.marginLeft = (transform)? -styles.width*0.5: 0;
+            styles.marginTop = (scale)? - styles.height * 0.5: 0;
+            styles.marginLeft = (scale)? - styles.width * 0.5: 0;
 
-            this.$el.css(styles)
+            this.$el.css(styles);
         }
 
         , _setTransform: function () {
-            var transform = this._getTransformMultiplier()
-            this._setTransformMultiplier(transform)
-            this._fitTransform(transform)
+            var scale = this._getScaleMultiplier();
+            this._setScale(this.$el, scale);
+            this._fitTransform(scale);
         }
 
         , _resetTransform: function () {
-            this._setTransformMultiplier(1)
-            this._fitTransform(0)
+            this._setScale(this.$el, 1);
+            this._fitTransform(0);
         }
 
-        /* modes */
+        // modes
         , _isFullMode: function () {
-            return this.$body.hasClass('slider-mode-full');
+            return this.$body.hasClass(this.CLASSES.slider_mode_full);
         }
 
         , _toggleMode: function () {
-            if (this._isFullMode()) {
-                this.exitFullMode();
-            } else {
-                this.enterFullMode();
-            }
+            (this._isFullMode())? this.exitFullMode(): this.enterFullMode();
         }
 
         , enterFullMode: function () {
-            this.$html.addClass('slider-mode-full');
-            this.$body.addClass('slider-mode-full');
+            this.$html.addClass(this.CLASSES.slider_mode_full);
+            this.$body.addClass(this.CLASSES.slider_mode_full);
 
-            this.$background = $('<div class="' + this.options.backgroundCl + '"></div>').appendTo(this.$body);
+            this.$background = $('<div class="' + this.CLASSES.slider_background + '"></div>').appendTo(this.$body);
 
             this._setTransform();
-            this.$el.addClass('active');
+            this.$el.addClass(this.CLASSES.slider_active);
         }
 
         , exitFullMode: function () {
-            this.$body.removeClass('slider-mode-full');
-            this.$html.removeClass('slider-mode-full');
+            this.$html.removeClass(this.CLASSES.slider_mode_full);
+            this.$body.removeClass(this.CLASSES.slider_mode_full);
 
-            this.$background && this.$background.remove();
-            this.$background = null;
+            if (this.$background) {
+                this.$background.remove();
+                delete this.$background;
+            }
 
             this._resetTransform();
-            this.$el.removeClass('active');
+            this.$el.removeClass(this.CLASSES.slider_active);
         }
     };
 
     $.fn.slider = function (options) {
-        var args = Array.prototype.slice.call(arguments, 1)   /* allow call public method with arguments */
-          , instance = this.data('slider')
-          , isMethodCall = (typeof options === 'string')      /* senseless comment: brackets only for easy reading */
-          , returnValue = this;                               /* how about custom method returnValue (not always this for chaining)? */
+        var instance = this.data('slider')
+          , isMethodCall = typeof options === 'string'
+          , methodParams = Array.prototype.slice.call(arguments, 1) // отделяем имя метода от его параметров
+          , returnValue = this;                                     // пока возвращаем this для цепочек
 
         this.each(function() {
             if (isMethodCall) {
                 if (!instance) {
-                    return new Error('Cannot call ' +  method + ' before init jQuery.slider');
+                    throw new Error('Cannot call ' +  method + ' before init jQuery.slider');
                 }
+                // служебные методы (начинаются с _), которые также не даем вызвать
                 if ($.isFunction(instance[options]) || options.charAt(0) === '_') {
-                    return new Error('Method ' +  method + ' not found among jQuery.slider methods');
+                    throw new Error('Method ' +  method + ' not found among jQuery.slider methods');
                 }
-
                 instance[options](args);
             } else {
                 if (instance) {
-                    /* what shall we do, if widget already initialized? */
+                    // хотим чтобы экземпляр слайдера нельзя было переопределить
+                    throw new Error('jQuery.slider were already initialized');
                 } else {
                     $(this).data('slider', new $.Slider(this, options));
                 }

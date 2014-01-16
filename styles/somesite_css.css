@@ -3,8 +3,7 @@ html, body, div, span,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre, a,
 strong, sub, sup, b, i,
 ol, ul, li, label, img,
-table, caption, tbody, tfoot, thead, tr, th, td
-{
+table, caption, tbody, tfoot, thead, tr, th, td {
     margin: 0;
     padding: 0;
     border: 0;
@@ -13,69 +12,59 @@ table, caption, tbody, tfoot, thead, tr, th, td
     vertical-align: baseline;
 }
 
-body
-{
+body {
     line-height: 1;
 }
 
-ol, ul
-{
+ol, ul {
     list-style: none;
 }
 
-blockquote, q
-{
+blockquote, q {
     quotes: none;
 }
 
 blockquote:before,
 blockquote:after,
 q:before,
-q:after
-{
+q:after {
     content: '';
     content: none;
 }
 
-table
-{
+table {
     border-collapse: collapse;
     border-spacing: 0;
 }
 
 /* site styles */
-body
-{
+body {
     font-family: Arial, Helvetica, sans-serif;
     background-color: #F6F5F3;
     color: #333;
 }
 
-h1
-{
+h1 {
     font-weight: bold;
     font-size: 1.8em;
 }
 
-h2
-{
+h2 {
     margin-top: 1em;
     font-weight: bold;
     font-size: 1.3em;
 }
 
-p
-{
+p {
     margin: 0.75em 0;
     font-size: 1em;
     line-height: 1.5;
 }
 
-.page
-{
+.page {
     height: 100%;
     min-height: 640px;
-    width: 40%;
+    width: 760px;
     min-width: 740px;
     margin: 20px auto;
     background: #fff;
@@ -87,19 +76,21 @@ p
             box-shadow: 0 0 0 1px rgba(0,0,0,.1),0 3px 4px -3px rgba(0,0,0,.3);
 }
 
-.content
-{
+.content {
     padding: 25px;
 }
 
 /* site slider customize */
-.slider
-{
+.slider {
     margin: 0 auto;
 }
 
-.my-first-slider .slide
-{
+.slider-slide {
+    color: #FFF;
+}
+
+.my-first-slider .slider-content,
+.my-first-slider .slider-nav .slider-slide {
     color: #FFF;
     background-color: #1C75A5;
     background-image: -webkit-gradient(linear, 0 0, 0 100%, color-stop(0, #61D0EC), color-stop(1, #1C75A5));
@@ -110,8 +101,8 @@ p
     background-image:         linear-gradient(top, #61D0EC 0%, #1C75A5 100%);
 }
 
-.my-second-slider .slide
-{
+.my-second-slider .slider-content,
+.my-second-slider .slider-nav .slider-slide {
     color: #FFF;
     background-color: #2A1F47;
     background-image: -webkit-gradient(linear, 0 0, 0 100%, color-stop(0, #773469), color-stop(1, #2A1F47));
@@ -122,34 +113,24 @@ p
     background-image:         linear-gradient(top, #773469 0%, #2A1F47 100%);
 }
 
-.my-first-slider.active,
-.my-second-slider.active
-{
-    -webkit-box-shadow: 0 0 0 1px rgba(0,0,0,.1),0 0 10px 0 rgba(0,0,0,.6);
-       -moz-box-shadow: 0 0 0 1px rgba(0,0,0,.1),0 0 10px 0 rgba(0,0,0,.6);
-            box-shadow: 0 0 0 1px rgba(0,0,0,.1),0 0 10px 0 rgba(0,0,0,.6);
-}
-.my-background
-{
+.my-background {
     position: absolute;
     top: 0;
     left: 0;
     height: 100%;
     width: 100%;
     z-index: 10000;
-    background: #494949 url(../images/bg.jpg) center top;
+    background: #fff;
 }
+
 .my-first-slider h2,
 .my-first-slider h3,
-.my-first-slider p
-{
+.my-first-slider p {
     text-shadow: 2px 2px 2px #1C75A5;
 }
 
 .my-second-slider h2,
 .my-second-slider h3,
-.my-second-slider p
-{
+.my-second-slider p {
     text-shadow: 2px 2px 2px #2A1F47;
-}
 }
