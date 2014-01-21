@@ -6,33 +6,50 @@
     $.Slider.prototype = {
         // constants
         DEFAULTS: {
-              showNav: true
-            , showCounter: true
+              navigation: true
+            , counter: false
+            , controlPanel: true
             , animateToggleNav: 250
             , animateStep: 750
         }
 
         , CLASSES: {
             // common slider
-              slider_active:     'slider-active'
-            , slider_mode_full:  'slider-mode-full'
-            , slider_background: 'slider-background'
-            , slider_content:    'slider-content'
+              slider_active:    'slider-active'
+            , slider_mode_full: 'slider-mode-full'
+            , slider_background:'slider-background'
+            , slider_content:   'slider-content'
+            , slider_slides:    'slider-slides'
             // counter
-            , counter:       'slider-counter'
+            , counter:          'slider-counter'
             // slide
-            , slide:         'slider-slide'
-            , slide_num:     'slider-slide__num-'
-            , slide_current: 'slider-slide__current'
-            , slide_visible: 'slider-slide__visible'
+            , slide:            'slider-slide'
+            , slide_num:        'slider-slide__num-'
+            , slide_current:    'slider-slide__current'
+            , slide_visible:    'slider-slide__visible'
             // navigation
-            , nav:           'slider-nav'
-            , nav_content:   'slider-nav__content'
-            , nav_btn:       'slider-nav__btn'
-            , nav_btn_prev:  'slider-nav__btn-role-prev'
-            , nav_btn_next:  'slider-nav__btn-role-next'
-            , nav_slides_start:  'slider-nav__slides-start'
-            , nav_slides_end:    'slider-nav__slides-end'
+            , nav:              'slider-nav'
+            , nav_content:      'slider-nav__content'
+            , nav_btn:          'slider-nav__btn'
+            , nav_btn_prev:     'slider-nav__btn-role-prev'
+            , nav_btn_next:     'slider-nav__btn-role-next'
+            , nav_slides_start: 'slider-nav__slides-start'
+            , nav_slides_end:   'slider-nav__slides-end'
+            // control panel
+            , cp:               'slider-cp'
+            , cp_content:       'slider-cp__content'
+            , cp_content_left:  'slider-cp__content-left'
+            , cp_content_right: 'slider-cp__content-right'
+            , cp_content_center:'slider-cp__content-center'
+            // control panel buttons
+            , cp_btn:           'slider-cp__btn'
+            , cp_btn_start:     'slider-cp__btn-role-start'
+            , cp_btn_end:       'slider-cp__btn-role-end'
+            , cp_btn_prev:      'slider-cp__btn-role-prev'
+            , cp_btn_next:      'slider-cp__btn-role-next'
+            , cp_btn_toggle:    'slider-cp__btn-toggle'
+            , cp_btn_toggle_nav: 'slider-cp__btn-role-toggle-nav'
+            , cp_btn_toggle_mode:'slider-cp__btn-role-toggle-mode'
         }
 
         , KEY_CODES: {
@@ -57,6 +74,8 @@
             , PAGE_DOWN: 34
             // toggle navigation
             , N: 78
+            // toggle control panel
+            , C: 67
         }
 
         , PREF_PROPS: [
@@ -77,27 +96,42 @@
 
             this.currSlide = 0;
             this.$content = this.$el.find('.' + this.CLASSES.slider_content);
+            this.$content_slides = this.$content.find('.' + this.CLASSES.slider_slides);
+
+            if (!this.$content.length) throw new Error('jQuery.slider wouldn\'t work properly. Content element not found');
+            if (!this.$content_slides.length) throw new Error('jQuery.slider wouldn\'t work properly. Slides content element not found');
 
             this.$slides = this._getSlides();
             this.totalSlides = this.$slides.length;
 
-            if (this.options.showNav) {
+            if (this.options.navigation) {
                 this.$nav = this._makeNavigation();
                 this.$nav_slides = this._getSlides(this.$nav);
                 this.$nav_btn_prev = this.$nav.find('.' + this.CLASSES.nav_btn_prev);
                 this.$nav_btn_next = this.$nav.find('.' + this.CLASSES.nav_btn_next);
             }
-            if (this.options.showCounter) {
+            if (this.options.controlPanel) {
+                this.$cp = this._makeControlPanel();
+                this.$cp_btn_prev = this.$cp.find('.' + this.CLASSES.cp_btn_prev);
+                this.$cp_btn_next = this.$cp.find('.' + this.CLASSES.cp_btn_next);
+
+                this.$cp_btn_start = this.$cp.find('.' + this.CLASSES.cp_btn_start);
+                this.$cp_btn_end = this.$cp.find('.' + this.CLASSES.cp_btn_end);
+
+                this.$cp_btn_toggle_nav = this.$cp.find('.' + this.CLASSES.cp_btn_toggle_nav);
+                this.$cp_btn_toggle_mode = this.$cp.find('.' + this.CLASSES.cp_btn_toggle_mode);
+            }
+            if (this.options.counter) {
                 this.$counter = this._makeCounter();
             }
 
             this._bindEvents();
-            this.step(1);
+            this.start();
         }
 
         , _bindEvents: function () {
             var self = this;
-            this.$content.on('click', function (e) {
+            this.$content_slides.on('click', function (e) {
                 self._toggleMode();
             });
             this.$body.on('keydown', function (e) {
@@ -110,6 +144,16 @@
                     self._setTransform();
                 }
             });
+            if (this.$nav.length) {
+                this._bindNavigationEvents();
+            }
+            if (this.$cp.length) {
+                this._bindControlPanelEvents();
+            }
+        }
+
+        , _bindNavigationEvents: function () {
+            var self = this;
             if (this.$nav_btn_prev.length) {
                 this.$nav_btn_prev.on('click', function (e) { self.prev() });
             }
@@ -118,8 +162,49 @@
             }
         }
 
+        , _bindControlPanelEvents: function () {
+            var self = this;
+            if (this.$cp_btn_prev.length) {
+                this.$cp_btn_prev.on('click', function (e) {
+                    e.preventDefault();
+                    self.prev();
+                });
+            }
+            if (this.$cp_btn_next.length) {
+                this.$cp_btn_next.on('click', function (e) {
+                    e.preventDefault();
+                    self.next();
+                });
+            }
+            if (this.$cp_btn_start.length) {
+                this.$cp_btn_start.on('click', function (e) {
+                    e.preventDefault();
+                    self.start();
+                });
+            }
+            if (this.$cp_btn_end.length) {
+                this.$cp_btn_end.on('click', function (e) {
+                    e.preventDefault();
+                    self.end();
+                });
+            }
+            if (this.$cp_btn_toggle_nav.length) {
+                this.$cp_btn_toggle_nav.on('click', function (e) {
+                    e.preventDefault();
+                    self.toggleNavigation();
+                });
+            }
+            if (this.$cp_btn_toggle_mode.length) {
+                this.$cp_btn_toggle_mode.on('click', function (e) {
+                    e.preventDefault();
+                    self._toggleMode();
+                });
+            }
+        }
+
         , _keydown: function (e) {
             var keyCode = this.KEY_CODES;
+            e.preventDefault();
             switch (e.keyCode) {
                 case keyCode.HOME:
                     this.step(1);
@@ -148,7 +233,10 @@
                     this.prev();
                     break;
                 case keyCode.N:
-                    this.$nav && this._toggleNav();
+                    this.$nav && this.toggleNavigation();
+                    break;
+                case keyCode.C:
+                    this.$cp && this.toggleControlPanel();
                     break;
             }
         }
@@ -171,20 +259,75 @@
             }
         }
 
-        // navigation
-        , _makeNavigation: function () {
-            var content = this.$content.html();
-            var nav = '<div class="' + this.CLASSES.nav + '">' +
-                          '<div class="' + this.CLASSES.nav_btn +' '+ this.CLASSES.nav_btn_prev + '"></div>' +
-                          '<div class="' + this.CLASSES.nav_content + '">' +
-                              content +
-                          '</div>' +
-                          '<div class="' + this.CLASSES.nav_btn +' '+ this.CLASSES.nav_btn_next + '"></div>' +
-                      '</div>';
-            return $(nav).appendTo(this.$el);
+        // control panel
+        , _makeControlPanel: function () {
+            var left = '', center = '', right = '', template = '';
+
+            left = '<div class=' + this.CLASSES.cp_content_left + '>' + 
+                        '<a href="#" class="' + this.CLASSES.cp_btn + ' ' + 
+                                                this.CLASSES.cp_btn_toggle + ' ' + 
+                                                this.CLASSES.cp_btn_toggle_nav + '"' + 
+                                   ' title="показать панель навигации">&nbsp;' + 
+                        '</a>' + 
+                   '</div>';
+
+            center = '<div class=' + this.CLASSES.cp_content_center + '>' + 
+                        '<a href="#" class="' + this.CLASSES.cp_btn + ' ' + this.CLASSES.cp_btn_start + '"' + 
+                                   ' title="первый слайд">&#9646;&#9664;' + 
+                        '</a>' + 
+                        '<a href="#" class="' + this.CLASSES.cp_btn + ' ' + this.CLASSES.cp_btn_prev + '"' + 
+                                   ' title="предыдущий слайд">&#9664;' + 
+                        '</a>' + 
+                        '<a href="#" class="' + this.CLASSES.cp_btn + ' ' + this.CLASSES.cp_btn_next + '"' + 
+                                   ' title="следующий слайд">&#9654;' + 
+                        '</a>' + 
+                        '<a href="#" class="' + this.CLASSES.cp_btn + ' ' + this.CLASSES.cp_btn_end + '"' + 
+                                   ' title="последний слайд">&#9654;&#9646;' + 
+                        '</a>' + 
+                    '</div>';
+
+            right = '<div class=' + this.CLASSES.cp_content_right + '>' + 
+                        '<a href="#" class="' + this.CLASSES.cp_btn + ' ' + 
+                                                this.CLASSES.cp_btn_toggle + ' ' + 
+                                                this.CLASSES.cp_btn_toggle_mode + '"' + 
+                                   ' title="переключить полноэкранного режима">&nbsp;' + 
+                        '</a>' + 
+                    '</div>';
+
+            template = '<div class=' + this.CLASSES.cp + '>' + 
+                            '<div class=' + this.CLASSES.cp_content + '>' +
+                                left + center + right +
+                            '</div>' +
+                       '</div>';
+
+            return $(template).appendTo(this.$content);
         }
 
-        , _toggleNav: function () {
+        , toggleControlPanel: function () {
+            if (!this.$cp.length) throw new Error('jQuery.slider can\'t toggle navigation. Control panel is not build.');
+            if (this.$cp.is(':visible')) {
+                this.$cp.hide();
+            } else {
+                this.$cp.show();
+            }
+        }
+
+        // navigation
+        , _makeNavigation: function () {
+            var content, template;
+            content = this.$content_slides.html();
+            template = '<div class="' + this.CLASSES.nav + '">' +
+                          '<div class="' + this.CLASSES.nav_btn +' '+ this.CLASSES.nav_btn_prev + '"></div>' +
+                              '<div class="' + this.CLASSES.nav_content + '">' +
+                                  content +
+                               '</div>' +
+                          '<div class="' + this.CLASSES.nav_btn +' '+ this.CLASSES.nav_btn_next + '"></div>' +
+                       '</div>';
+            return $(template).appendTo(this.$el);
+        }
+
+        , toggleNavigation: function () {
+            if (!this.$nav.length) throw new Error('jQuery.slider can\'t toggle navigation. Navigation is not build.');
             var delay = this.options.animateToggleNav;
             this.$nav.finish();
             if (this.nav_visible) {
@@ -251,7 +394,7 @@
         }
 
         , step: function (slideNum) {
-            if (!slideNum) throw new Error('need slide number to step');
+            if (!slideNum) throw new Error('jQuery.slider can\'t do step. Need slide number to step');
 
             var $newSlide = this._getSlide(slideNum);
 
@@ -269,7 +412,7 @@
                 this.updateCounter(slideNum);
                 if (this.nav_visible) this._updateNavigation();
             } else {
-                throw new Error('slide witn number ' + slideNum + ' not found');
+                throw new Error('jQuery.slider can\'t do step. Slide witn number ' + slideNum + ' not found');
             }
         }
 
@@ -279,6 +422,14 @@
 
         , prev: function () {
             if (this.currSlide > 1) this.step(--this.currSlide);
+        }
+
+        , start: function () {
+            this.step(1);
+        }
+
+        , end: function () {
+            this.step(this.totalSlides);
         }
 
         // transformations
@@ -378,7 +529,7 @@
             } else {
                 if (instance) {
                     // хотим чтобы экземпляр слайдера нельзя было переопределить
-                    throw new Error('jQuery.slider were already initialized');
+                    throw new Error('jQuery.slider was already initialized');
                 } else {
                     $(this).data('slider', new $.Slider(this, options));
                 }
