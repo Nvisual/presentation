@@ -1,0 +1,124 @@
+﻿/* eraser */
+html, body, div, span,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre, a,
+strong, sub, sup, b, i,
+ol, ul, li, label, img,
+table, caption, tbody, tfoot, thead, tr, th, td {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+
+body {
+    line-height: 1;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+blockquote, q {
+    quotes: none;
+}
+
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+    content: '';
+    content: none;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/* site styles */
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #F6F5F3;
+    color: #333;
+}
+
+h1 {
+    font-weight: bold;
+    font-size: 1.8em;
+}
+
+h2 {
+    margin-top: 1em;
+    font-weight: bold;
+    font-size: 1.3em;
+}
+
+p {
+    margin: 0.75em 0;
+    font-size: 1em;
+    line-height: 1.5;
+}
+
+.page {
+    height: 100%;
+    min-height: 640px;
+    width: 760px;
+    min-width: 740px;
+    margin: 20px auto;
+    background: #fff;
+    -webkit-border-radius: 4px;
+       -moz-border-radius: 4px;
+            border-radius: 4px;
+    -webkit-box-shadow: 0 0 0 1px rgba(0,0,0,.1),0 3px 4px -3px rgba(0,0,0,.3);
+       -moz-box-shadow: 0 0 0 1px rgba(0,0,0,.1),0 3px 4px -3px rgba(0,0,0,.3);
+            box-shadow: 0 0 0 1px rgba(0,0,0,.1),0 3px 4px -3px rgba(0,0,0,.3);
+}
+
+.content {
+    padding: 25px;
+}
+
+/* site slider customize */
+.slider {
+    margin: 0 auto;
+}
+
+.slider-slide {
+    width: 650px;
+    padding: 0 30px;
+}
+
+.slider-counter {
+    font-weight: bold;
+}
+
+.my-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 10000;
+    background: #FFF;
+}
+
+.slider .slider-slide__num-1 h2,
+.slider .slider-slide__num-1 h3,
+.my-second-slider .slider-slide__num-7 h2 {
+    text-align: center;
+}
+
+.slider .slider-slide__num-1 h2,
+.my-second-slider .slider-slide__num-7 h2 {
+    margin-top: 180px;
+}
+
+.slider-slide li{
+    margin-bottom: 10px;
+}
+
+.my-second-slider .slider-slide__num-5 h2 {
+    color: #FFF;
+}
+.my-second-slider .slider-slide__num-5 {
+    background-image: url(../images/full.jpg);
+}

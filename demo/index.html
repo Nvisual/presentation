@@ -1,0 +1,235 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Презентация</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" type="text/css" href="styles/slider.css">
+    <link rel="stylesheet" type="text/css" href="styles/somesite_css.css">
+    <script type="text/javascript" src="http://yandex.st/jquery/2.0.3/jquery.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="javascripts/slider.js" charset="utf-8"></script>
+    <script type="text/javascript" src="javascripts/somesite_js.js" charset="utf-8"></script>
+</head>
+<body>
+    <div class="page">
+        <div class="content">
+            <h1>Заголовок некоторого сайта</h1>
+            <h2>Тема 1-й презентации</h2>
+            <p>
+                Позновательный текст, рассказывающий немного о теме презентации, авторе и еще о чем-нибудь.
+                Позновательный текст, рассказывающий немного о теме презентации, авторе и еще о чем-нибудь.
+                Позновательный текст, рассказывающий немного о теме презентации, авторе и еще о чем-нибудь.
+                Позновательный текст, рассказывающий немного о теме презентации, авторе и еще о чем-нибудь.
+                Позновательный текст, рассказывающий немного о теме презентации, авторе и еще о чем-нибудь.
+                Позновательный текст, рассказывающий немного о теме презентации, авторе и еще о чем-нибудь.
+            </p>
+            <p>
+                Позновательный текст, рассказывающий немного о теме презентации, авторе и еще о чем-нибудь.
+                Позновательный текст, рассказывающий немного о теме презентации, авторе и еще о чем-нибудь.
+                Позновательный текст, рассказывающий немного о теме презентации, авторе и еще о чем-нибудь.
+                Позновательный текст, рассказывающий немного о теме презентации, авторе и еще о чем-нибудь.
+                Позновательный текст, рассказывающий немного о теме презентации, авторе и еще о чем-нибудь.
+                Позновательный текст, рассказывающий немного о теме презентации, авторе и еще о чем-нибудь.
+            </p>
+            <div class="slider my-first-slider">
+                <div class="slider-content">
+                    <div class="slider-slides">
+                        <div class="slider-slide slider-slide__num-1">
+                            <h2>Slider.js</h2>
+                            <h3>Плагин для презентаций</h3>
+                        </div>
+                        <div class="slider-slide slider-slide__num-2">
+                            <div class="slide-header">
+                                <h2>Управление</h2>
+                            </div>
+                            <div class="slide-body">
+                                <p>Клик мыши на слайде - переключение полноэкранного режима</p>
+                                <p>Горячие клавиши (только в полноэкранном режиме):<p/>
+                                    <ul>
+                                        <li><b>RIGHT, DOWN, SPACE, PAGE_DOWN, ENTER, NUMPAD_ENTER - переход к следующему слайду</b></li>
+                                        <li><b>LEFT, UP, PAGE_UP - переход к предыдущему слайду</b></li>
+                                        <li><b>HOME - перейти к 1-му слайду</b></li>
+                                        <li><b>ESCAPE - выйти из полноэкранного режима</b></li>
+                                        <li><b>END - переход к последнему слайду</b></li>
+                                        <li><b>N - показать/скрыть панель навигации</b></li>
+                                        <li><b>C - показать/скрыть панель управления</b></li>
+                                    </ul>
+                            </div>
+                        </div>
+                        <div class="slider-slide slider-slide__num-3">
+                            <div class="slide-header">
+                                <h2>В двух словах о плагине</h2>
+                                <p>Slider.js - это jQuery плагин, который:</p>
+                                <ul>
+                                    <li><b>Позволяет разместить несколько презентаций на любой странице сайта;</b></li>
+                                    <li><b>Имеет типичный для jQuery плагинов интерфейс взаимодействия;</b></li>
+                                    <li><b>Масштабирует контент слайдов при переключении в полноэкранный режим;</b></li>
+                                    <li><b>Имеет панель навигации в виде миниатюр слайдов.</b></li>
+                                </ul>
+                            </div>
+                            <div class="slide-body">
+                            </div>
+                        </div>
+                        <div class="slider-slide slider-slide__num-4">
+                            <div class="slide-header">
+                                <h2>Подготовка презентации</h2>
+                            </div>
+                            <div class="slide-body">
+                                <p>На странице должны быть добавлены элементы (следуют по порядку вложенности):<br/>
+                                <ul>
+                                    <li><b>div.slider - контейнер для всей презентации;</b></li>
+                                    <li><b>div.slider-content - контейнер для контента презентации;</b></li>
+                                    <li><b>div.slider-slides - контейнер для для слайдов;</b></li>
+                                    <li><b>div.slider-slide.slider-slide__num-1 - слайд, где после "__num-" идет номер слайда.</b></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="slider-slide slider-slide__num-5">
+                            <div class="slide-header">
+                                <h2>Работа с плагином</h2>
+                            </div>
+                            <div class="slide-body">
+                                <pre class="code"><code class="javascript">$(<span class="string">"selector"</span>).slider();<span class="comment">// инициализируем плагин</span>
+$(<span class="string">"selector"</span>).slider(<span class="string">"step"</span>, <span class="number">1</span>);<span class="comment">// обращаемся к методу</span></code></pre>
+                            </div>
+                        </div>
+                        <div class="slider-slide slider-slide__num-6">
+                            <div class="slide-header">
+                                <h2>Доступные методы</h2>
+                            </div>
+                            <div class="slide-body">
+                                <ul>
+                                    <li><b>step - переход к слайду, номер передается аргументом;</b></li>
+                                    <li><b>next - переход к следующему слайду;</b></li>
+                                    <li><b>prev - переход к предыдущему слайду;</b></li>
+                                    <li><b>start - переход к 1-му слайду;</b></li>
+                                    <li><b>end - переход к последнему слайду;</b></li>
+                                    <li><b>toggleControlPanel - скрыть/показать панель управления;</b></li>
+                                    <li><b>toggleNavigation - скрыть/показать панель навигации;</b></li>
+                                    <li><b>enterFullMode - перей в полноэкранный режим;</b></li>
+                                    <li><b>exitFullMode - выйти из полноэкранного режима.</b></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="slider-slide slider-slide__num-7">
+                            <div class="slide-header">
+                                <h2>О грустном</h2>
+                            </div>
+                            <div class="slide-body">
+                                <p>На данном этапе развития, можно выделить следующие проблемы:</p>
+                                <ul>
+                                    <li><b>Использование CSS 3 (scale, translate и т.д.) ощутимо влияет на кроссбраузерность;</b></li>
+                                    <li><b>Slider.js - молчун, события пока не реализованы;</b></li>
+                                    <li><b>Дублирование слайдов - пока не реализован механизм отображения слайда по частям.</b></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h2>Тема 2-й презентации</h2>
+            <p>
+                Позновательный текст, рассказывающий немного о теме 2-й презентации, авторе 2-й и еще о чем-нибудь.
+                Позновательный текст, рассказывающий немного о теме 2-й презентации, авторе 2-й и еще о чем-нибудь.
+                Позновательный текст, рассказывающий немного о теме 2-й презентации, авторе 2-й и еще о чем-нибудь.
+                Позновательный текст, рассказывающий немного о теме 2-й презентации, авторе 2-й и еще о чем-нибудь.
+                Позновательный текст, рассказывающий немного о теме 2-й презентации, авторе 2-й и еще о чем-нибудь.
+                Позновательный текст, рассказывающий немного о теме 2-й презентации, авторе 2-й и еще о чем-нибудь.
+            </p>
+            <div class="slider my-second-slider">
+                <div class="slider-content">
+                    <div class="slider-slides">
+                        <div class="slider-slide slider-slide__num-1">
+                            <h2>Шаблон презентации</h2>
+                        </div>
+                        <div class="slider-slide slider-slide__num-2">
+                            <div class="slide-header">
+                                <h2>Заголовок</h2>
+                                <h3>Подзаголовок</h3>
+                            </div>
+                            <div class="slide-body">
+                                <p>Презентация - документ или комплект документов, предназначенный для представления чего-либо (организации, проекта, продукта и т.п.).</p>
+                                <p>Цель презентации - донести до целевой аудитории полноценную информацию об объекте презентации в удобной форме. Презентация является одним из маркетинговых и PR инструментов.</p>
+                            </div>
+                        </div>
+                        <div class="slider-slide slider-slide__num-3">
+                            <div class="slide-header">
+                                <h2>Списки</h2>
+                            </div>
+                            <div class="slide-body">
+                                <p>Ненумерованный список:</p>
+                                <ul>
+                                    <li><b>элемент ненумерованного списка;</b></li>
+                                    <li><b>элемент ненумерованного списка;</b></li>
+                                    <li><b>элемент ненумерованного списка.</b></li>
+                                </ul>
+                                <p>Нумерованный список:</p>
+                                <ol>
+                                    <li><b>элемент нумерованного списка;</b></li>
+                                    <li><b>элемент нумерованного списка;</b></li>
+                                    <li><b>элемент нумерованного списка.</b></li>
+                                </ol>
+                            </div>
+                        </div>
+                        <div class="slider-slide slider-slide__num-4">
+                            <div class="slide-header">
+                                <h2>Код</h2>
+                            </div>
+                            <div class="slide-body">
+                                <pre class="code"><code class="javascript"><span class="keyword">function</span> <span class="function">loop (x) {</span>
+   <span class="keyword">if</span> (x <span class="operator">&gt;</span><span class="operator">=</span> <span class="number">10</span>)
+      <span class="keyword">return</span>;</span>
+  <span class="comment"> // do something
+</span>   <span class="function">loop(</span></span>x <span class="operator">+</span> <span class="number">1</span>)</span>;</span>
+}</span>
+<span class="function">loop(</span></span><span class="number">0</span>)</span>;</span>
+                                    </code>
+                                </pre>
+                            </div>
+                        </div>
+                        <div class="slider-slide slider-slide__num-5">
+                            <div class="slide-header">
+                                <h2>Картинка на весь слайд</h2>
+                            </div>
+                            <div class="slide-body">
+                            </div>
+                        </div>
+                        <div class="slider-slide slider-slide__num-6">
+                            <div class="slide-header">
+                                <h2>Таблица</h2>
+                            </div>
+                            <div class="slide-body">
+                                <table>
+                                        <tbody><tr>
+                                          <th></th><th>Столбец 1</th><th>Столбец 2</th><th>Столбец 3</th><th>Столбец 4</th>
+                                        </tr>
+                                        <tr>
+                                            <td>Строка 1</td><td>текст</td><td>текст</td><td>текст</td><td>текст</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Строка 2</td><td>текст</td><td>текст</td><td>текст</td><td>текст</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Строка 3</td><td>текст</td><td>текст</td><td>текст</td><td>текст</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Строка 4</td><td>текст</td><td>текст</td><td>текст</td><td>текст</td>
+                                        </tr>
+                                      </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="slider-slide slider-slide__num-7">
+                            <div class="slide-header">
+                                <h2>THE END</h2>
+                            </div>
+                            <div class="slide-body">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

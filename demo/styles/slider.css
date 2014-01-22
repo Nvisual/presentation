@@ -1,0 +1,373 @@
+﻿/* common */
+.slider {
+    width: 100%;
+    height: 100%;
+    border: 1px solid #999;
+    color: #111;
+    background-color: #AAA;
+    -webkit-transform: scale(1);
+       -moz-transform: scale(1);
+        -ms-transform: scale(1);
+          o-transform: scale(1);
+            transform: scale(1);
+}
+
+.slider h2,
+.slider h3 {
+    margin: 0;
+    font-weight: 300;
+    text-align: left;
+    color: #888;
+}
+
+.slider h2 {
+    font-size: 50px;
+}
+
+.slider h3 {
+    font-size: 30px;
+}
+
+.slider-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10000;
+    background: #494949 url(../images/bg_gray.jpg) center top;
+}
+
+.slider-slide {
+    display: none;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    opacity: 0;
+    background-color: #FFF;
+}
+
+.slider-slides {
+    background-color: #FFF;
+   -webkit-box-shadow: 0 2px 4px rgba(0,0,0,.5);
+       -moz-box-shadow: 0 2px 4px rgba(0,0,0,.5);
+            box-shadow: 0 2px 4px rgba(0,0,0,.5);
+}
+
+.slider-slide__current {
+    display: block;
+    opacity: .99;
+}
+
+/* counter */
+.slider-counter {
+    position: absolute;
+    top: 0%;
+    right: 0%;
+    padding: 10px;
+}
+
+/* full screen */
+.slider-mode-full {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.slider-mode-full .slider-active {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 10001;
+    border: none;
+    background: none;
+}
+
+.slider-mode-full .slider-active .slider-slide {
+    position: absolute;
+    display: block;
+}
+
+/* navigation */
+.slider-nav {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+    width: 20%;
+    height: 100%;
+    margin-left: -20%;
+    overflow: hidden;
+    -webkit-perspective: 1;
+       -moz-perspective: 1;
+        -ms-perspective: 1;
+         -o-perspective: 1;
+            perspective: 1;
+}
+
+.slider-nav .slider-slide {
+    position: absolute;
+    display: block;
+    opacity: .99;
+    cursor: pointer;
+    -webkit-box-shadow: 0 2px 4px rgba(0,0,0,.5);
+       -moz-box-shadow: 0 2px 4px rgba(0,0,0,.5);
+            box-shadow: 0 2px 4px rgba(0,0,0,.5);
+    -webkit-transition: all 0.25s ease;
+       -moz-transition: all 0.25s ease;
+         -o-transition: all 0.25s ease;
+            transition: all 0.25s ease;
+}
+.slider-nav .slider-slide__active {
+    box-shadow: 0 0 0 1px #376da3, 0 0 0 10px #4b86c2, 0 20px 50px rgba(42,43,45,0.6);
+}
+
+.slider-nav__content {
+    width: 100%;
+    height: 100%;
+}
+
+.slider-nav__btn {
+    display: none;
+    position: absolute;
+    margin: 0 auto;
+    padding: 0;
+    width: 142px;
+    height: 34px;
+    text-align: center;
+    cursor: pointer;
+    z-index: 1;
+    /* нарисовать себе свою стрелочку + убрать скейл. big thanks to images.yandex.ru */
+    background: url(../images/ya_arrow.png) no-repeat;
+    -webkit-transform: scale(0.5);
+       -moz-transform: scale(0.5);
+        -ms-transform: scale(0.5);
+          o-transform: scale(0.5);
+            transform: scale(0.5);
+}
+
+.slider-nav__btn-role-prev {
+    top: 0%;
+    margin-top: 20px;
+    left: 0;
+    background-position: 50% 0;
+}
+
+.slider-nav__btn-role-next {
+    top: 100%;
+    margin-top: -55px;
+    left: 0;
+    background-position: 50% -34px;
+}
+
+.slider-nav__slides-start .slider-nav__btn-role-prev,
+.slider-nav__slides-end .slider-nav__btn-role-next {
+    display: block;
+}
+
+.slider-nav__btn-role-prev:hover {
+    background-position: 50% -68px;
+}
+
+.slider-nav__btn-role-next:hover {
+    background-position: 50% -102px;
+}
+
+.slider-content {
+    width: 710px;
+    height: 488px;
+}
+
+.slider-slides {
+    width: 100%;
+    height: 100%;
+}
+
+.slider-nav .slider-slide {
+    opacity: 0;
+}
+
+.slider-nav .slider-slide__visible {
+    opacity: .49;
+}
+
+.slider-nav .slider-slide__current {
+    opacity: .99;
+}
+
+/* control panel */
+/* нарисовать себе свою кнопочки. big thanks to slideshare.net for sprite materials*/
+.slider-cp {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    height: 40px;
+    min-width: 300px;
+    width: 100%;
+}
+
+.slider-cp__content {
+    width: 100%;
+    padding: 5px 0;
+    border-top: 1px solid #999;
+    border-bottom: 1px solid #999;
+    overflow: hidden;
+    background-color: #A8A8A8;
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, color-stop(0, #ECECEC), color-stop(1, #A8A8A8));
+    background-image: -webkit-linear-gradient(top, #ECECEC 0%, #A8A8A8 100%);
+    background-image:    -moz-linear-gradient(top, #ECECEC 0%, #A8A8A8 100%);
+    background-image:     -ms-linear-gradient(top, #ECECEC 0%, #A8A8A8 100%);
+    background-image:      -o-linear-gradient(top, #ECECEC 0%, #A8A8A8 100%);
+    background-image:         linear-gradient(top, #ECECEC 0%, #A8A8A8 100%);
+}
+
+.slider-cp__content-left {
+    width: 30px;
+}
+
+.slider-cp__content-center {
+    width: 130px;
+    margin: 0 auto;
+}
+
+.slider-cp__content-right {
+    width: 30px;
+}
+
+.slider-cp__btn {
+    float: left;
+    height: 28px;
+    width: 28px;
+    text-align: center;
+    text-decoration: none;
+    line-height: 26px;
+    color: #111;
+}
+
+.slider-cp__content-left,
+.slider-cp__content-left .slider-cp__btn {
+    float: left;
+}
+
+.slider-cp__content-right,
+.slider-cp__content-right .slider-cp__btn {
+    float: right;
+}
+
+.slider-cp__content-right {
+    padding-right: 5px;
+}
+
+.slider-cp__btn-role-prev,
+.slider-cp__btn-role-next {
+    border: 1px solid gray;
+    border-radius: 100%;
+    line-height: 24px;
+    height: 26px;
+    width: 26px;
+    background-color: #A8A8A8;
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ECECEC), to(1, #A8A8A8));
+    background-image: -webkit-linear-gradient(top, #ECECEC 0%, #A8A8A8 100%);
+    background-image:    -moz-linear-gradient(top, #ECECEC 0%, #A8A8A8 100%);
+    background-image:     -ms-linear-gradient(top, #ECECEC 0%, #A8A8A8 100%);
+    background-image:      -o-linear-gradient(top, #ECECEC 0%, #A8A8A8 100%);
+    background-image:         linear-gradient(top, #ECECEC 0%, #A8A8A8 100%);
+    background-repeat: repeat-x;
+}
+
+.slider-cp__btn-role-prev {
+    margin-right: 5px;
+}
+
+.slider-cp__content-center .slider-cp__btn:focus,
+.slider-cp__content-center .slider-cp__btn:hover{
+    background-position: 0 -28px;
+    text-decoration: none;
+}
+
+.slider-cp__btn-toggle {
+    background: url(../images/sprite-cp.png) no-repeat;
+}
+
+.slider-cp__btn-role-toggle-mode {
+    background-position: 0px 0px;
+}
+.slider-mode-full .slider-cp__btn-role-toggle-mode {
+    background-position: -28px 0px;
+}
+
+.slider-cp__btn-role-toggle-nav {
+    background-position: -56px 0px;
+}
+
+
+/* template */
+.slider-slide {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+}
+
+.slide-header {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.slider ul {
+    list-style: disc;
+}
+
+.slider ol {
+    list-style: decimal;
+}
+
+.slider ul, .slider ol {
+    color: #C00;
+    list-style-position: inside;
+}
+
+.slider ul b, .slider ol b {
+    font-weight: normal;
+    color: #111;
+}
+
+.slider .code {
+    border-left: 6px solid rgba(0,83,159,0.65);
+    background-color: #DDD;
+    padding: 10px;
+    white-space: pre;
+    line-height: 1.5;
+    font-family: monospace;
+}
+.slider .javascript .keyword {
+    font-weight: bold;
+}
+
+.slider .javascript .number {
+    color: #099;
+}
+
+.slider .javascript .string {
+    color: #D14;
+}
+
+.slider .javascript .comment {
+    color: #999;
+}
+
+
+.slider table {
+    width: 100%;
+    border-spacing: 2px;
+    border-bottom: 1px solid #797979;
+}
+
+.slider table th {
+    text-align: left;
+    color: white;
+    background-color: #4387fd;
+}
+
+.slider table td, table th {
+    padding: 10px 5px;
+    border: 1px solid #515151;
+}
