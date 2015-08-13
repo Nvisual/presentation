@@ -1,5 +1,4 @@
-<a href="https://codeclimate.com/repos/55cced186956803bd1000c4d/feed"><img src="https://codeclimate.com/repos/55cced186956803bd1000c4d/badges/5436f44fa6f518b24545/gpa.svg" /></a>
-
+<a href="https://codeclimate.com/repos/55cced186956803bd1000c4d/feed"><img src="https://codeclimate.com/repos/55cced186956803bd1000c4d/badges/5436f44fa6f518b24545/gpa.svg" /></a
 Описание задания
 ============
 Реализуйте систему для показа презентаций.
